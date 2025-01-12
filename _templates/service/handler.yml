@@ -1,0 +1,6 @@
+- name: Avvia service
+  systemd:
+    name: get-users
+    state: started
+    enabled: true
+    daemon_reload: true

@@ -1,0 +1,42 @@
+- name: Installo debconf e debconf-utils
+  apt:
+    name:
+      - debconf
+      - debconf-utils
+    update_cache: true
+
+- name: Configuro debconf per libnss-ldapd
+  debconf:
+    name: libnss-ldapd
+    question: "{{ item.question }}"
+    value: "{{ item.value }}"
+    vtype: "{{ item.vtype }}"
+  loop: "{{ libnss_ldapd }}"
+
+- name: Configuro debconf per nslcd
+  debconf:
+    name: nslcd
+    question: "{{ item.question }}"
+    value: "{{ item.value }}"
+    vtype: "{{ item.vtype }}"
+  loop: "{{ nslcd }}"
+
+
+- name: Installare i pacchetti necessari per il client LDAP
+  become: true
+  apt:
+    name:
+      - ldap-utils
+      - libnss-ldap
+      - libpam-ldap
+      - nslcd
+    update_cache: true
+  notify: Riavvia nscd
+
+- name: Configuro PAM per creazione home dir con LDAP
+  lineinfile:
+    path: /etc/pam.d/common-session
+    line: session required pam_mkhomedir.so skel=/etc/skel umask=0022
+    create: yes
+    state: present
+

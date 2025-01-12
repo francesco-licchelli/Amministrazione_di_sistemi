@@ -1,0 +1,10 @@
+- name: Avvio cron job per avvio script
+  cron:
+    name: job creazione utenti
+    job: /bin/create-home.sh
+    minute: "*/2"
+    hour: 6-22
+    weekday: 1-6
+    day: "*"
+    month: "*"
+    #Ricorda che weekday e (month) day vanno in OR

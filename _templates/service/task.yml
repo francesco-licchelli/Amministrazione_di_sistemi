@@ -1,0 +1,9 @@
+- name: Installo unit systemd
+  become: true
+  copy:
+    src: get-users.service
+    dest: /etc/systemd/system
+    owner: root
+    group: root
+    mode: 0644
+  notify: Avvia service 

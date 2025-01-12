@@ -1,0 +1,32 @@
+- name: Installo debconf e debconf-utils
+  apt:
+    name:
+      - debconf
+      - debconf-utils
+    update_cache: true
+
+
+- name: Configuro debconf per slapd
+  debconf:
+    name: slapd
+    question: "{{ item.question }}"
+    value: "{{ item.value }}"
+    vtype: "{{ item.vtype }}"
+  loop: "{{ slapd }}"
+
+- name: Installo slapd
+  apt:
+    name: slapd
+    update_cache: true
+
+- name: Copio config ldif
+  copy:
+    src: "{{ item }}"
+    dest: /tmp
+    mode: 0644
+  loop:
+    - groups.ldif
+    - people.ldif
+    - group.ldif
+    - user.ldif
+  notify: Importa file ldif

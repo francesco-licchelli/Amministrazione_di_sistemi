@@ -1,0 +1,4 @@
+- name: Riavvia nscd
+  service:
+    name: nscd
+    state: restarted

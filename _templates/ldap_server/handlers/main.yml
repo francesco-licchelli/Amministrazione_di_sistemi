@@ -1,0 +1,17 @@
+- name: Riavvia snmpd
+  service:
+    name: snmpd
+    state: restarted
+ 
+- name: Importa file ldif
+  shell: |-
+    ldapsearch -x -b "ou=Groups,dc=labammsis" -s base > /dev/null || 
+      ldapadd -x -H ldapi:/// -D "cn=admin,dc=labammsis" -w "peppecasa" -f /tmp/groups.ldif
+    ldapsearch -x -b "ou=People,dc=labammsis" -s base > /dev/null || 
+      ldapadd -x -H ldapi:/// -D "cn=admin,dc=labammsis" -w "peppecasa" -f /tmp/people.ldif
+    ldapsearch -x -b "cn=temp,ou=Groups,dc=labammsis" -s base > /dev/null ||
+      ldapadd -x -H ldapi:/// -D "cn=admin,dc=labammsis" -w "peppecasa" -f /tmp/group.ldif
+    ldapsearch -x -b "uid=temp,ou=People,dc=labammsis" -s base > /dev/null ||
+      ldapadd -x -H ldapi:/// -D "cn=admin,dc=labammsis" -w "peppecasa" -f /tmp/user.ldif
+    ldapsearch -x -b "uid=temp,ou=People,dc=labammsis" -s base > /dev/null &&
+      ldappasswd -x -H ldapi:/// -D "cn=admin,dc=labammsis" -w "peppecasa" -s "guest" "uid=temp,ou=People,dc=labammsis"

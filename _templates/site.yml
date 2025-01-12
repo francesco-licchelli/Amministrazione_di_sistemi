@@ -1,0 +1,24 @@
+- hosts: all
+  become: true
+  roles:
+    - role: common
+  
+- hosts: R
+  become: true
+  roles:
+    - role: router
+  
+- hosts: C*,S*
+  become: true
+  roles:
+    - role: client_server
+
+# - hosts: C*
+#   become: true
+#   roles:
+#     - role: client
+
+# - hosts: S*
+#   become: true
+#   roles:
+#     - role: server
